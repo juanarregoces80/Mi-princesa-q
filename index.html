@@ -1,0 +1,197 @@
+
+  <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Almas Gemelas - Libro de Amor</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: #f2efe9;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .book-container {
+      width: 800px;
+      max-width: 90vw;
+      background: #fffdf8;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 40px 60px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    h1, h2 {
+      font-weight: normal;
+      color: #6b4f4f;
+    }
+    h1 {
+      font-size: 2.4em;
+      margin-bottom: 8px;
+    }
+    h2 {
+      font-size: 1.6em;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #cfa6a6;
+      padding-bottom: 8px;
+    }
+    .content {
+      font-size: 1.1em;
+      line-height: 1.6;
+      color: #4a3b3b;
+      white-space: pre-line;
+    }
+    .poem {
+      font-style: italic;
+      margin-top: 25px;
+      background: #f8f3f0;
+      padding: 18px 24px;
+      border-left: 5px solid #cfa6a6;
+      border-radius: 6px;
+      color: #7a5c5c;
+    }
+    .nav-buttons {
+      position: absolute;
+      bottom: 30px;
+      width: calc(100% - 120px);
+      display: flex;
+      justify-content: space-between;
+    }
+    button {
+      background: #cfa6a6;
+      border: none;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 1em;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:disabled {
+      background: #e8d6d6;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
+      background: #b07d7d;
+    }
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #bba9a9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="book-container">
+  <h1>Almas Gemelas — La Historia de Un Amor Real</h1>
+
+  <h2 id="page-title">Parte 1: La primera mirada (16/06/2025)</h2>
+  <div class="content" id="page-content"></div>
+
+  <div class="nav-buttons">
+    <button id="prev-btn" disabled>Anterior</button>
+    <button id="next-btn">Siguiente</button>
+  </div>
+</div>
+
+<footer>Creado con ❤️ para mi mona especial</footer>
+
+<!-- 🎵 Música de fondo automática -->
+<audio autoplay loop hidden>
+  <source src="musica.mp3" type="audio/mpeg">
+  Tu navegador no soporta el audio HTML5.
+</audio>
+
+<script>
+  const pages = [
+    {
+      title: "Parte 1: La primera mirada (16/06/2025)",
+      content: `Era un día cualquiera, de esos que parecen no tener nada especial, cuando el destino decidió jugar su mejor carta...`,
+      poem: `En el ruido del mundo, un susurro callado,...`
+    },
+    {
+      title: "Parte 2: El Mes de Amor Acelerado",
+      content: `Lo que para muchos es un lento caminar, para él fue un salto profundo y apasionado...`,
+      poem: `Amar en un mes, lo que otros no logran en años,...`
+    },
+    {
+      title: "Parte 3: Los Retos y las Imperfecciones",
+      content: `No todo fue un camino de rosas. Como toda relación verdadera, enfrentaron momentos difíciles...`,
+      poem: `Amar no es solo sol, también es tormenta,...`
+    },
+    {
+      title: "Parte 4: El Crecer Juntos",
+      content: `Cada mañana, al despertar, ambos decidían que ese día sería una oportunidad para crecer...`,
+      poem: `Cada día un paso, una nueva promesa,...`
+    },
+    {
+      title: "Parte 5: La Oficialización del Amor (24/06/2025)",
+      content: `Después de meses de crecimiento y aprendizaje, llegó el día esperado...`,
+      poem: `Un día marcado en el alma, una fecha sin final,...`
+    },
+    {
+      title: "Parte 6: Los Sueños Compartidos",
+      content: `Con el amor ya declarado y fortalecido, comenzaron a soñar juntos...`,
+      poem: `Dos almas que sueñan, dos caminos que se cruzan,...`
+    },
+    {
+      title: "Parte 7: La Cotidianidad con Amor",
+      content: `No solo los grandes momentos definían su amor, sino la rutina compartida...`,
+      poem: `No es en las grandes gestas, ni en promesas lejanas,...`
+    },
+    {
+      title: "Parte 8: Las Promesas No Escritas",
+      content: `No hicieron pactos escritos ni promesas rimbombantes. Su compromiso era silencioso...`,
+      poem: `No hay pergaminos, ni juramentos sin fin,...`
+    },
+    {
+      title: "Parte 9: El Amor que Sigue",
+      content: `Mirando hacia el futuro, saben que el camino será largo y lleno de sorpresas...`,
+      poem: `El camino es largo, el horizonte incierto,...`
+    }
+  ];
+
+  let currentPage = 0;
+  const titleEl = document.getElementById('page-title');
+  const contentEl = document.getElementById('page-content');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  function renderPage(index) {
+    const page = pages[index];
+    titleEl.textContent = page.title;
+    contentEl.innerHTML = page.content.replace(/\n/g, '<br>') + `<div class="poem">${page.poem.replace(/\n/g, '<br>')}</div>`;
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === pages.length - 1;
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentPage > 0) {
+      currentPage--;
+      renderPage(currentPage);
+      window.scrollTo(0,0);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentPage < pages.length - 1) {
+      currentPage++;
+      renderPage(currentPage);
+      window.scrollTo(0,0);
+    }
+  });
+
+  // Inicializar
+  renderPage(currentPage);
+</script>
+
+</body>
+</html>
